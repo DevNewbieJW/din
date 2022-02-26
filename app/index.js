@@ -27,7 +27,7 @@ app.on("will-quit", () => {
 
   window = new BrowserWindow({
     width: 600,
-    height: 260,
+    height: 70,
     alwaysOnTop: true,
     show: false,
     frame: false,
