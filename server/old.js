@@ -5,18 +5,14 @@ import { extname, join } from "path";
 import { readdirSync } from "fs";
 import { fileIconToBuffer } from "file-icon";
 
-const directories = [
-  expandTilde("/Applications"),
-  expandTilde("~/Applications"),
-  expandTilde("/System/Applications"),
-];
+const directories = [expandTilde("/Applications"), expandTilde("~/Applications"), expandTilde("/System/Applications")];
+
+const makeId = () => Math.random().toString(32).slice(2);
 
 const getIcon = async (path) => {
   const icon = await fileIconToBuffer(path);
   return icon;
 };
-
-const makeId = () => Math.random().toString(32).slice(2);
 
 let notes = [];
 for (const appDir of directories) {

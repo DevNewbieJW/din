@@ -1,35 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import { useVirtual } from "react-virtual";
 
 import { getFileList, openFileById } from "./api/files";
 import { matchSorter as _matchSorter } from "match-sorter";
 
 import useKey from "./hooks/useKey";
 
-const FileItem = ({ file, fileIndex }) => {
-  console.log(fileIndex);
-  return (
-    <div
-      id={file.id}
-      className={`w-full px-2 py-1 h-14 ${
-        file.id === fileIndex ? "bg-gray-800 text-gray-200 border-none rounded-lg" : "bg-opacity-100"
-      }`}
-      key={file.id}
-    >
-      <div className='flex flex-row items-center'>
-        <img src={`http://localhost:5000/${file.id}/image`} alt='' width={30} className='inline-block w-12' />
-        <div className='px-2'>
-          <div className='text-xl text-gray-300'>{file.name}</div>
-          <div className='text-sm text-gray-400'>{file.filePath}</div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 const FileList = ({ data, searchValue }) => {
   const [files, setFiles] = useState([]);
-  const [counter, setCounter] = useState(-1);
-  const [index, setIndex] = useState(0);
+  const [counter, setCounter] = useState(0);
 
   const matchSorter = (items, text) =>
     _matchSorter(items, text, {
@@ -37,17 +16,27 @@ const FileList = ({ data, searchValue }) => {
       baseSort: (a, b) => (a.item.usage < b.item.usage ? +1 : -1),
     });
 
-  useEffect(() => {
-    // const filteredApps = data.filter((file) => file.name.toLowerCase().startsWith(searchValue.toLowerCase()));
-    const filteredApps = matchSorter(data, searchValue);
-    setFiles(filteredApps);
-    // eslint-disable-next-line
-  }, [searchValue]);
+  const overflowContainerRef = useRef();
+
+  const rowVirtualizer = useVirtual({
+    size: data?.length || 0,
+    parentRef: overflowContainerRef,
+    estimateSize: React.useCallback(() => 64, []),
+  });
+
+  const activeItemIndex = data.findIndex((item) => item.id === data[counter].id);
+
+  useLayoutEffect(() => {
+    rowVirtualizer.scrollToIndex(activeItemIndex);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeItemIndex]);
 
   useEffect(() => {
-    setIndex(files[counter]?.id);
+    const filteredApps = matchSorter(data, searchValue);
+    setFiles(filteredApps);
+    setCounter(0);
     // eslint-disable-next-line
-  }, [counter]);
+  }, [searchValue]);
 
   const handleKeyNavigation = (keyEvent) => {
     if (keyEvent === "ArrowUp") {
@@ -61,21 +50,37 @@ const FileList = ({ data, searchValue }) => {
       }
     }
   };
-
   useKey("ArrowUp", () => handleKeyNavigation("ArrowUp"));
   useKey("ArrowDown", () => handleKeyNavigation("ArrowDown"));
 
   useKey("Enter", async () => {
+    const selectedItem = files[counter].id;
     const firstItem = files[0].id;
-    await openFileById(index || firstItem);
+    await openFileById(selectedItem || firstItem);
     window.app?.hide();
   });
 
   return (
-    <div className='w-full h-12 text-lg text-gray-400 space-y-2'>
-      {files.map((file) => (
-        <FileItem key={file.id} filteredFiles={files} file={file} fileIndex={index} />
-      ))}
+    <div className='w-full h-[420px] text-lg text-gray-400 space-y-2 overflow-y-scroll' ref={overflowContainerRef}>
+      {Object.entries(files).map(([key, file]) => {
+        return (
+          <div
+            key={key}
+            id={file.id}
+            className={`w-full px-2 py-1 h-14 ${
+              parseInt(key) === counter ? "bg-gray-800 text-gray-200 border-none rounded-lg" : "bg-opacity-100"
+            }`}
+          >
+            <div className='flex flex-row items-center'>
+              <img src={`http://localhost:5001/${file.id}/image`} alt={file.name} className='inline-block w-12' />
+              <div className='px-2'>
+                <div className='text-xl text-gray-300'>{file.name}</div>
+                <div className='text-sm text-gray-400'>{file.filePath}</div>
+              </div>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 };
@@ -121,7 +126,7 @@ const App = () => {
       className={`w-[600px] ${inputValue ? "h-[500px]" : "h-[70px]"} p-2 bg-gray-700 overflow-auto`}
       ref={appContainerRef}
     >
-      <div className='w-full h-14 fixed top-0 left-0 border-b-[1px]'>
+      <div className='w-full h-14 fixed top-0 left-0 border-b-2 border-gray-600'>
         <input
           autoFocus
           className='w-full h-full bg-gray-700 text-gray-200 p-4 text-2xl'
