@@ -8,6 +8,15 @@
     "build": "electron-builder --dir",
     "prod": "electron-builder"
   },
+  "build": {
+    "appId": "af.brumm.ygg",
+    "productName": "Yggdrasil",
+    "mac": {
+      "icon": "512.png",
+      "target": "dir",
+      "category": "public.app-category.utilities"
+    }
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",

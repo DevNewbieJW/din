@@ -29,15 +29,15 @@ class Haru {
     for (const directory of this.directories) {
       const files = readdirSync(directory, { withFileTypes: true });
       for (const file in files) {
-        // const isApp = extname(files[file].name) === ".app";
-        // if (isApp) {
+        const isApp = extname(files[file].name) === ".app";
+        if (isApp) {
         const filePath = join(directory, files[file].name);
         this.notes.push({
           name: files[file].name,
           filePath,
           id: this.makeId(),
         });
-        // }
+        }
       }
     }
     this.cache = this.notes;

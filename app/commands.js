@@ -1,4 +1,4 @@
-const { ipcMain, BrowserWindow, screen } = require('electron')
+const { ipcMain, BrowserWindow } = require('electron')
 const { centerWindowOnDisplayWithCursor } = require('./utils')
 
 ipcMain.handle('resize', async (event, { width, height }) => {

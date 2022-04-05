@@ -24,7 +24,9 @@ const FileList = ({ data, searchValue }) => {
     estimateSize: React.useCallback(() => 64, []),
   });
 
-  const activeItemIndex = data.findIndex((item) => item.id === data[counter].id);
+  const activeItemIndex = data.findIndex(
+    (item) => item.id === data[counter].id
+  );
 
   useLayoutEffect(() => {
     rowVirtualizer.scrollToIndex(activeItemIndex);
@@ -61,21 +63,30 @@ const FileList = ({ data, searchValue }) => {
   });
 
   return (
-    <div className='w-full h-[420px] text-lg text-gray-400 space-y-2 overflow-y-scroll' ref={overflowContainerRef}>
+    <div
+      className="w-full h-[420px] text-lg text-gray-400 space-y-2 overflow-y-scroll"
+      ref={overflowContainerRef}
+    >
       {Object.entries(files).map(([key, file]) => {
         return (
           <div
             key={key}
             id={file.id}
             className={`w-full px-2 py-1 h-14 ${
-              parseInt(key) === counter ? "bg-gray-800 text-gray-200 border-none rounded-lg" : "bg-opacity-100"
+              parseInt(key) === counter
+                ? "bg-gray-800 text-gray-200 border-none rounded-lg"
+                : "bg-opacity-100"
             }`}
           >
-            <div className='flex flex-row items-center'>
-              <img src={`http://localhost:5001/${file.id}/image`} alt={file.name} className='inline-block w-12' />
-              <div className='px-2'>
-                <div className='text-xl text-gray-300'>{file.name}</div>
-                <div className='text-sm text-gray-400'>{file.filePath}</div>
+            <div className="flex flex-row items-center">
+              <img
+                src={`http://localhost:5001/${file.id}/image`}
+                alt={file.name}
+                className="inline-block w-12"
+              />
+              <div className="px-2">
+                <div className="text-xl text-gray-300">{file.name}</div>
+                <div className="text-sm text-gray-400">{file.filePath}</div>
               </div>
             </div>
           </div>
@@ -93,7 +104,7 @@ const Files = ({ searchValue }) => {
   }, []);
 
   return (
-    <div className='w-full pt-14'>
+    <div className="w-full pt-14">
       <FileList data={data} searchValue={searchValue} />
     </div>
   );
@@ -123,13 +134,15 @@ const App = () => {
 
   return (
     <div
-      className={`w-[600px] ${inputValue ? "h-[500px]" : "h-[70px]"} p-2 bg-gray-700 overflow-auto`}
+      className={`w-[600px] ${
+        inputValue ? "h-[500px]" : "h-[70px]"
+      } p-2 bg-slate-700 overflow-auto`}
       ref={appContainerRef}
     >
-      <div className='w-full h-14 fixed top-0 left-0 border-b-2 border-gray-600'>
+      <div className="w-full h-14 fixed top-0 left-0 border-b-2 border-slate-600">
         <input
           autoFocus
-          className='w-full h-full bg-gray-700 text-gray-200 p-4 text-2xl'
+          className="w-full h-full bg-slate-700 text-gray-200 p-4 text-2xl"
           value={inputValue}
           onChange={(event) => setInputValue(event.target.value)}
           onKeyDown={(event) => {

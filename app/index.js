@@ -16,7 +16,7 @@ app.on("will-quit", () => {
   await app.whenReady();
   app.dock.hide(); // also hides from app switcher
 
-  globalShortcut.register("Meta+Space", () => {
+  globalShortcut.register("Cmd+Space", () => {
     if (window.isVisible()) {
       window.hide();
     } else {
@@ -26,8 +26,8 @@ app.on("will-quit", () => {
   });
 
   window = new BrowserWindow({
-    width: 600,
-    height: 70,
+    width: 352,
+    height: 176,
     alwaysOnTop: true,
     show: false,
     frame: false,
@@ -36,7 +36,6 @@ app.on("will-quit", () => {
     resizable: false,
     closable: false,
     acceptFirstMouse: true,
-    backgroundColor: "#1f2937",
     webPreferences: {
       preload: path.join(__dirname, "./preload.js"),
     },
