@@ -36,6 +36,7 @@ app.on("will-quit", () => {
     resizable: false,
     closable: false,
     acceptFirstMouse: true,
+    backgroundColor: "#334454",
     webPreferences: {
       preload: path.join(__dirname, "./preload.js"),
     },

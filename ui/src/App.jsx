@@ -64,7 +64,7 @@ const FileList = ({ data, searchValue }) => {
 
   return (
     <div
-      className="w-full h-[420px] text-lg text-gray-400 space-y-2 overflow-y-scroll"
+      className="w-full h-[420px] text-lg text-gray-400 space-y-2 pr-4 overflow-y-scroll"
       ref={overflowContainerRef}
     >
       {Object.entries(files).map(([key, file]) => {
@@ -72,7 +72,7 @@ const FileList = ({ data, searchValue }) => {
           <div
             key={key}
             id={file.id}
-            className={`w-full px-2 py-1 h-14 ${
+            className={`px-2 py-1 h-14 ${
               parseInt(key) === counter
                 ? "bg-gray-800 text-gray-200 border-none rounded-lg"
                 : "bg-opacity-100"
